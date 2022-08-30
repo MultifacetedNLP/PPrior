@@ -1,0 +1,5 @@
+outs:
+- md5: dbb2b5919f443c27617d009fd8185112.dir
+  size: 441779518
+  nfiles: 12
+  path: contrastive-training-pretrainedT5
