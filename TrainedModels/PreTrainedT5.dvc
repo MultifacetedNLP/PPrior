@@ -1,0 +1,5 @@
+outs:
+- md5: ca8ed1832b00031aa08c063b49e4ecd0.dir
+  size: 894845065
+  nfiles: 6
+  path: PreTrainedT5
