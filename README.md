@@ -1,4 +1,4 @@
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
+# PPrior: Proactive Prioritization of App issues
 
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
+Proactive Prioritization is a novel framework which is able to automatically predict the number of votes a particular mobile application review can receive.
+In this GitHub repository, we provided the Python implementation of this framework.
