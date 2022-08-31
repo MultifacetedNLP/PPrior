@@ -68,7 +68,7 @@ def RunKNearestNeighbors(task):
     if task == "train":
         train_knn(kneighbor, model, dataset["train"], batch_size=batch_size)
     elif task == "search":
-        result = search_knn_first(kneighbor, model, dataset["test"].select(range(1000)), K=101, nprobe=2000, batch_size=16)
+        result = search_knn_first(kneighbor, model, dataset["test"], K=101, nprobe=2000, batch_size=16)
 
         result.set_format("numpy")
         y_preds = result["predicted_label"]
