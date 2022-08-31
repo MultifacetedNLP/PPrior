@@ -14,11 +14,7 @@ The steps for setting up the project on a local machine are as follows:
 2- Install the [DVC](https://github.com/iterative/dvc) (Data Version Control) command line tool. The DVC is necessary for pulling the trained models and datasets from Google Drive to a local machine. 
 The installation section can be found [here](https://github.com/iterative/dvc#installation).
 
-3- Run the following command line to pull all the trained models and datasets to a local machine.
-```
-dvc pull
-```
-Trained Models and datasets can also be pulled separately.
+3- Run the following command lines to pull trained models and datasets separately.
 
 Pull Datasets:
 ```
@@ -26,16 +22,17 @@ dvc pull Datasets
 ```
 Pull the PreTrainedT5 model:
 ```
-cd TrainedModels
-dvc pull PreTrainedT5
+dvc pull TrainedModels/PreTrainedT5
 ```
 Pull the SentenceTransformer model:
 ```
-cd TrainedModels
-dvc pull contrastive-training-pretrainedT5
+dvc pull TrainedModels/contrastive-training-pretrainedT5
 ```
-Pull the KNN index:
+Pull the Multiclass Classification KNN index:
 ```
-cd TrainedModels
-dvc pull FinalKNN
+dvc pull TrainedModels/FinalKNN
+```
+Pull the Binary Classification KNN index:
+```
+dvc pull TrainedModels/FinalAnomalyKNN
 ```
