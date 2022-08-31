@@ -14,7 +14,6 @@ class FaissKNeighbors:
         self.path = path
         self.batch_num = 0
         self.batch_size = batch_size
-        print(classes_size)
         self.class_size = classes_size # np.array([617115, 320318, 139776, 67629, 30933])
         self.num_classes = num_classes
 
