@@ -4,7 +4,7 @@ from faiss.contrib.ondisk import merge_ondisk
 
 
 class FaissKNeighbors:
-    def __init__(self, d, path, batch_size, gpu):
+    def __init__(self, d, path, batch_size, gpu, classes_size, num_classes):
         if gpu == True:
             res = faiss.StandardGpuResources()
             self.index = faiss.index_cpu_to_gpu(res, 0, faiss.index_factory(d, "IVF4000,Flat"))
@@ -14,7 +14,9 @@ class FaissKNeighbors:
         self.path = path
         self.batch_num = 0
         self.batch_size = batch_size
-        self.class_size = np.array([617115, 320318, 139776, 67629, 30933])
+        print(classes_size)
+        self.class_size = classes_size # np.array([617115, 320318, 139776, 67629, 30933])
+        self.num_classes = num_classes
 
     def fit(self, X, y):
         if self.batch_num == 0:
@@ -34,7 +36,7 @@ class FaissKNeighbors:
         self.index.nprobe = nprobe
         distances, indices = self.index.search(X.astype(np.float32), k=k)
         votes = self.y[indices]
-        predictions = [np.argmax((np.bincount(x, minlength=5) / self.class_size)) for x in votes]
+        predictions = [np.argmax((np.bincount(x, minlength=self.num_classes) / self.class_size)) for x in votes]
         return predictions
 
     def predict_radius(self, X, radius=1.5, nprobe=80):
@@ -46,7 +48,7 @@ class FaissKNeighbors:
             votes = self.y[I[lims[index]:lims[index + 1]]]
             if votes.size == 0:
                 votes = np.array([0])
-            prediction = np.argmax((np.bincount(votes, minlength=5)))
+            prediction = np.argmax((np.bincount(votes, minlength=self.num_classes)))
             predictions.append(prediction)
 
         return predictions
@@ -61,7 +63,7 @@ class FaissKNeighbors:
             vote = votes[index]
             weight = weights[index]
 
-            one_hot = np.zeros((vote.size, 5))
+            one_hot = np.zeros((vote.size, self.num_classes))
             one_hot[np.arange(vote.size), vote] = 1
 
             prediction = np.argmax(weight.dot(one_hot))

@@ -1,7 +1,7 @@
 from datasets import load_dataset
 
 
-def process():
+def process(binaryClassification=False):
     # Load the Datasets
     dataset = load_dataset("csv", data_files={"train": "../Datasets/processed_features_train.csv",
                                               "validation": "../Datasets/processed_features_dev.csv",
@@ -44,5 +44,9 @@ def process():
     df_val.drop(
         ['app_name', 'review', 'votes', 'date', 'label_name', 'Words Per Review', 'category', 'num_reviews', 'price',
          'rating'], axis=1, inplace=True)
+
+    if binaryClassification:
+        df_train["label"] = (df_train["label"] == 4).astype(int)
+        df_val["label"] = (df_val["label"] == 4).astype(int)
 
     return df_train, df_val

@@ -49,21 +49,53 @@ def RunSelfSupervision():
 
 
 def RunContrastiveTraining():
-    df_train, df_val = PreprocessDataForContrastiveTraining.process()
+    df_train, df_val = PreprocessDataForContrastiveTraining.process(binaryClassification=False)
 
     T5 = Transformer("../TrainedModels/PreTrainedT5", max_seq_length=512)
     pooler = models.Pooling(T5.get_word_embedding_dimension(), pooling_mode_mean_tokens=True)
     model = SentenceTransformer(modules=[T5, pooler])
 
     ContrastiveTraining.train(df_train, model, batch_size=8, epochs=1,
-                              output_path="../TrainedModels/contrastive-training-pretrainedT5")
+                              output_path="../TrainedModels/contrastive-training-pretrainedT5", num_classes=5)
+
+
+def RunContrastiveTrainingBinary():
+    df_train, df_val = PreprocessDataForContrastiveTraining.process(binaryClassification=True)
+
+    T5 = Transformer("../TrainedModels/PreTrainedT5", max_seq_length=512)
+    pooler = models.Pooling(T5.get_word_embedding_dimension(), pooling_mode_mean_tokens=True)
+    model = SentenceTransformer(modules=[T5, pooler])
+
+    ContrastiveTraining.train(df_train, model, batch_size=8, epochs=1,
+                              output_path="../TrainedModels/contrastive-training-anomaly-pretrainedT5", num_classes=2)
 
 
 def RunKNearestNeighbors(task):
-    dataset = PreprocessDataForKNearestNeighborsFiass.process()
+    dataset, classes_size = PreprocessDataForKNearestNeighborsFiass.process(binaryClassification=False)
     batch_size = 10000
-    kneighbor = FaissKNeighbors(768, path="../TrainedModels/FinalKNN", batch_size=batch_size, gpu=False)
+    kneighbor = FaissKNeighbors(768, path="../TrainedModels/FinalKNN", batch_size=batch_size, gpu=False,
+                                classes_size=classes_size, num_classes=5)
     model = SentenceTransformer("../TrainedModels/contrastive-training-pretrainedT5", device='cuda')
+
+    if task == "train":
+        train_knn(kneighbor, model, dataset["train"], batch_size=batch_size)
+    elif task == "search":
+        result = search_knn_first(kneighbor, model, dataset["test"], K=101, nprobe=2000, batch_size=16)
+
+        result.set_format("numpy")
+        y_preds = result["predicted_label"]
+        y_valid = result["label"]
+
+        plot_confusion_matrix(y_preds, y_valid, ["not_serious", "getting_traction", "pay_attention", "serious", "hot"])
+        show_metrics(y_preds, y_valid)
+
+
+def RunKNearestNeighborsBinary(task):
+    dataset, classes_size = PreprocessDataForKNearestNeighborsFiass.process(binaryClassification=True)
+    batch_size = 10000
+    kneighbor = FaissKNeighbors(768, path="../TrainedModels/FinalAnomalyKNN", batch_size=batch_size, gpu=False,
+                                classes_size=classes_size, num_classes=2)
+    model = SentenceTransformer("../TrainedModels/contrastive-training-anomaly-pretrainedT5", device='cuda')
 
     if task == "train":
         train_knn(kneighbor, model, dataset["train"], batch_size=batch_size)

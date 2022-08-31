@@ -1,7 +1,7 @@
 from datasets import load_dataset, Dataset, DatasetDict
 
 
-def process():
+def process(binaryClassification=False):
     # Load the Datasets
     dataset = load_dataset("csv", data_files={"train": "../Datasets/processed_features_train.csv",
                                               "validation": "../Datasets/processed_features_dev.csv",
@@ -56,7 +56,14 @@ def process():
         ['app_name', 'review', 'votes', 'date', 'label_name', 'Words Per Review', 'category', 'num_reviews', 'price',
          'rating'], axis=1, inplace=True)
 
+    if binaryClassification:
+        dfs["train"]["label"] = (dfs["train"]["label"] == 4).astype(int)
+        dfs["validation"]["label"] = (dfs["validation"]["label"] == 4).astype(int)
+        dfs["test"]["label"] = (dfs["test"]["label"] == 4).astype(int)
+
+    classes_size = dfs["train"]["label"].value_counts().values
+
     # Convert the Dataframe to a Dataset
     dataset = DatasetDict({split: Dataset.from_pandas(pdset, preserve_index=False) for split, pdset in dfs.items()})
 
-    return dataset
+    return dataset, classes_size
