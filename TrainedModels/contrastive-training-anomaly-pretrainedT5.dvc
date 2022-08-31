@@ -1,0 +1,5 @@
+outs:
+- md5: 6f4a2c01a0198c7761673af619778957.dir
+  size: 441778023
+  nfiles: 12
+  path: contrastive-training-anomaly-pretrainedT5
