@@ -24,15 +24,19 @@ Pull the PreTrainedT5 model:
 ```
 dvc pull TrainedModels/PreTrainedT5
 ```
-Pull the SentenceTransformer model:
+Pull the Multiclass SentenceTransformer model:
 ```
 dvc pull TrainedModels/contrastive-training-pretrainedT5
 ```
-Pull the Multiclass Classification KNN index:
+Pull the Multiclass KNN index:
 ```
 dvc pull TrainedModels/FinalKNN
 ```
-Pull the Binary Classification KNN index:
+Pull the Binary SentenceTransformer model:
+```
+dvc pull TrainedModels/contrastive-training-anomaly-pretrainedT5
+```
+Pull the Binary KNN index:
 ```
 dvc pull TrainedModels/FinalAnomalyKNN
 ```
