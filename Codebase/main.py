@@ -43,6 +43,22 @@ def show_metrics(y_preds, y_valid):
     print(f"MCC Score: {MCC}")
 
 
+def show_metrics_binary(y_preds, y_valid):
+    f1 = f1_score(y_valid, y_preds)
+    accuracy = accuracy_score(y_valid, y_preds)
+    recall = recall_score(y_valid, y_preds)
+    precision = precision_score(y_valid, y_preds)
+    kappa = cohen_kappa_score(y_valid, y_preds)
+    MCC = matthews_corrcoef(y_valid, y_preds)
+
+    print(f"F1 Score of Class One: {f1}")
+    print(f"Accuracy Score: {accuracy}")
+    print(f"Recall Score of Class One: {recall}")
+    print(f"Precision Score of Class One: {precision}")
+    print(f"Cohen's kappa Score: {kappa}")
+    print(f"MCC Score: {MCC}")
+
+
 def RunSelfSupervision():
     PreprocessDataForSelfSupervision.process()
     subprocess.call(['sh', './SelfSupervision.sh'])
@@ -106,8 +122,8 @@ def RunKNearestNeighborsBinary(task):
         y_preds = result["predicted_label"]
         y_valid = result["label"]
 
-        plot_confusion_matrix(y_preds, y_valid, ["not_serious", "getting_traction", "pay_attention", "serious", "hot"])
-        show_metrics(y_preds, y_valid)
+        plot_confusion_matrix(y_preds, y_valid, ["not hot", "hot"])
+        show_metrics_binary(y_preds, y_valid)
 
 
 if __name__ == '__main__':
@@ -118,10 +134,10 @@ if __name__ == '__main__':
     if task == "a":
         RunSelfSupervision()
     elif task == "b":
-        RunContrastiveTraining()
+        RunContrastiveTraining()  # RunKNearestNeighborsBinary
     elif task == "c":
-        RunKNearestNeighbors("train")
+        RunKNearestNeighbors("train")  # RunKNearestNeighborsBinary("train")
     elif task == "d":
-        RunKNearestNeighbors("search")
+        RunKNearestNeighbors("search")  # RunKNearestNeighborsBinary("search")
     else:
         print("Incorrect input.")
