@@ -1,0 +1,5 @@
+outs:
+- md5: c1e59631c17377f2a8eacef8d7164757.dir
+  size: 3655459497
+  nfiles: 5
+  path: FinalAnomalyKNN
