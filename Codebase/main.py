@@ -134,7 +134,7 @@ if __name__ == '__main__':
     if task == "a":
         RunSelfSupervision()
     elif task == "b":
-        RunContrastiveTraining()  # RunKNearestNeighborsBinary
+        RunContrastiveTraining()  # RunContrastiveTrainingBinary()
     elif task == "c":
         RunKNearestNeighbors("train")  # RunKNearestNeighborsBinary("train")
     elif task == "d":
