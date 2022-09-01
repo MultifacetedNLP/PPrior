@@ -127,17 +127,30 @@ def RunKNearestNeighborsBinary(task):
 
 
 if __name__ == '__main__':
-    task = input("Which task do you want to run? (A or B or C or D) \n A) Self Supervision \n B) Contrastive Training "
-                 "\n C) Train K Nearest Neighbors \n D) Search K Nearest Neighbors \n")
+
+    task = input("Which task do you want to run? (A or B or C or D or E or F or G) \n A) Self Supervision \n "
+                 "B) Contrastive Training for Multiclass Classification \n "
+                 "C) Train K Nearest Neighbors for Multiclass Classification \n "
+                 "D) Search K Nearest Neighbors for Multiclass Classification \n "
+                 "E) Contrastive Training for Binary Classification \n "
+                 "F) Train K Nearest Neighbors for Binary Classification \n "
+                 "G) Search K Nearest Neighbors for Binary Classification \n")
+
     task = task.lower()
 
     if task == "a":
         RunSelfSupervision()
     elif task == "b":
-        RunContrastiveTraining()  # RunContrastiveTrainingBinary()
+        RunContrastiveTraining()
     elif task == "c":
-        RunKNearestNeighbors("train")  # RunKNearestNeighborsBinary("train")
+        RunKNearestNeighbors("train")
     elif task == "d":
-        RunKNearestNeighbors("search")  # RunKNearestNeighborsBinary("search")
+        RunKNearestNeighbors("search")
+    elif task == "e":
+        RunContrastiveTrainingBinary()
+    elif task == "f":
+        RunKNearestNeighborsBinary("train")
+    elif task == "g":
+        RunKNearestNeighborsBinary("search")
     else:
         print("Incorrect input.")
