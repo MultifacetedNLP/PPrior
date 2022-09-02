@@ -2,7 +2,7 @@ import PreprocessDataForSelfSupervision
 import PreprocessDataForKNearestNeighborsFiass
 import PreprocessDataForContrastiveTraining
 import ContrastiveTraining
-from KNearestNeighborsFaiss import FaissKNeighbors, train_knn, search_knn_first
+from KNearestNeighborsFaiss import FaissKNeighbors, index_knn, search_knn_first
 from sentence_transformers import SentenceTransformer, models
 import subprocess
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix, f1_score, precision_score, recall_score, \
@@ -93,8 +93,8 @@ def RunKNearestNeighbors(task):
                                 classes_size=classes_size, num_classes=5)
     model = SentenceTransformer("../TrainedModels/contrastive-training-pretrainedT5", device='cuda')
 
-    if task == "train":
-        train_knn(kneighbor, model, dataset["train"], batch_size=batch_size)
+    if task == "index":
+        index_knn(kneighbor, model, dataset["train"], batch_size=batch_size)
     elif task == "search":
         result = search_knn_first(kneighbor, model, dataset["test"], K=101, nprobe=2000, batch_size=16)
 
@@ -113,8 +113,8 @@ def RunKNearestNeighborsBinary(task):
                                 classes_size=classes_size, num_classes=2)
     model = SentenceTransformer("../TrainedModels/contrastive-training-anomaly-pretrainedT5", device='cuda')
 
-    if task == "train":
-        train_knn(kneighbor, model, dataset["train"], batch_size=batch_size)
+    if task == "index":
+        index_knn(kneighbor, model, dataset["train"], batch_size=batch_size)
     elif task == "search":
         result = search_knn_first(kneighbor, model, dataset["test"], K=101, nprobe=2000, batch_size=16)
 
@@ -130,10 +130,10 @@ if __name__ == '__main__':
 
     task = input("Which task do you want to run? (A or B or C or D or E or F or G) \n A) Self Supervision \n "
                  "B) Contrastive Training for Multiclass Classification \n "
-                 "C) Train K Nearest Neighbors for Multiclass Classification \n "
+                 "C) Index K Nearest Neighbors for Multiclass Classification \n "
                  "D) Search K Nearest Neighbors for Multiclass Classification \n "
                  "E) Contrastive Training for Binary Classification \n "
-                 "F) Train K Nearest Neighbors for Binary Classification \n "
+                 "F) Index K Nearest Neighbors for Binary Classification \n "
                  "G) Search K Nearest Neighbors for Binary Classification \n")
 
     task = task.lower()
@@ -143,13 +143,13 @@ if __name__ == '__main__':
     elif task == "b":
         RunContrastiveTraining()
     elif task == "c":
-        RunKNearestNeighbors("train")
+        RunKNearestNeighbors("index")
     elif task == "d":
         RunKNearestNeighbors("search")
     elif task == "e":
         RunContrastiveTrainingBinary()
     elif task == "f":
-        RunKNearestNeighborsBinary("train")
+        RunKNearestNeighborsBinary("index")
     elif task == "g":
         RunKNearestNeighborsBinary("search")
     else:

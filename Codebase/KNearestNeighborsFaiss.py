@@ -88,7 +88,7 @@ class FaissKNeighbors:
         self.y = np.load(f'{self.path}/trained.npy')
 
 
-def train_knn(kneighbor, model, train_dataset, batch_size):
+def index_knn(kneighbor, model, train_dataset, batch_size):
     def fit_on_dataset(batch):
         kneighbor.fit(model.encode(batch['text'], convert_to_numpy=True), batch['label'])
 
