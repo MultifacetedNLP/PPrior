@@ -5,7 +5,7 @@ import math
 
 
 def get_positives(df_train, label, num_pos, con_lambda):
-    df_train_current = df_train[df_train["label"] == label]
+    df_train_current = df_train[df_train["label"] == label].sort_values(by="votes")
     current_vote = -1
 
     for _, row in df_train_current.iterrows():
@@ -22,7 +22,7 @@ def get_positives(df_train, label, num_pos, con_lambda):
 
 
 def get_negatives(df_train, label, num_neg_per_class, k, con_lambda):
-    df_train_current = df_train[df_train["label"] == label]
+    df_train_current = df_train[df_train["label"] == label].sort_values(by="votes")
     df_train_neg = df_train[df_train["label"] != label]
     current_vote = -1
 
@@ -31,8 +31,8 @@ def get_negatives(df_train, label, num_neg_per_class, k, con_lambda):
         for _ in range(k):
 
             if current_vote != row["votes"]:
-                df_train_select = df_train_neg[((df_train_neg["votes"] - row["votes"]) > con_lambda) |
-                                                ((df_train_neg["votes"] - row["votes"]) < -con_lambda)]
+                df_train_select = df_train_neg[((df_train_neg["votes"] - row["votes"]) >= con_lambda) |
+                                                ((df_train_neg["votes"] - row["votes"]) <= -con_lambda)]
                 current_vote = row["votes"]
 
             selected_rows_idx = random.sample(range(len(df_train_select)), num_neg_per_class)
