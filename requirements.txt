@@ -1,0 +1,14 @@
+matplotlib
+scikit-learn
+torch
+transformers
+datasets
+sentence-transformers
+numpy
+pandas
+flax
+jax
+optax
+tqdm
+faiss-gpu
+huggingface-hub
