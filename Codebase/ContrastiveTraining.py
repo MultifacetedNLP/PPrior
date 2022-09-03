@@ -1,5 +1,5 @@
 import random
-from sentence_transformers import InputExample, SentenceTransformer, models, losses
+from sentence_transformers import InputExample, losses
 from torch.utils.data import DataLoader
 import math
 
@@ -12,33 +12,32 @@ def get_positives(df_train, label, num_pos):
         selected_rows_idx = random.sample(range(len(df_train_current)), num_pos)
 
         for selected_row in selected_rows_idx:
-            yield InputExample(texts=[row['training_text'], df_train_current.iloc[selected_row]["training_text"]],
-                               label=1)
+            yield InputExample(texts=[row['training_text'], df_train_current.iloc[selected_row]["training_text"]], label=1)
 
 
-def get_negatives(df_train, label, num_neg_per_class, num_classes):
+def get_negatives(df_train, label, num_classes, num_neg_per_class, k=4):
     df_train_current = df_train[df_train["label"] == label]
     df_train_neg_list = []
 
-    for neg_label in range(num_classes): # [0, 1, 2, 3, 4]
+    for neg_label in range(num_classes):
         if neg_label != label:
             df_train_neg_list.append(df_train[df_train["label"] == neg_label])
 
     for _, row in df_train_current.iterrows():
 
-        # for df_train_neg in df_train_neg_list:
-        df_train_neg = df_train_neg_list[random.choice(range(num_classes - 1))]
+        for _ in range(k):
 
-        selected_rows_idx = random.sample(range(len(df_train_neg)), num_neg_per_class)
+            df_train_neg = df_train_neg_list[random.choice(range(num_classes - 1))]
+            selected_rows_idx = random.sample(range(len(df_train_neg)), num_neg_per_class)
 
-        for selected_row in selected_rows_idx:
-            yield InputExample(texts=[row['training_text'], df_train_neg.iloc[selected_row]["training_text"]], label=0)
+            for selected_row in selected_rows_idx:
+                yield InputExample(texts=[row['training_text'], df_train_neg.iloc[selected_row]["training_text"]], label=0)
 
 
 def train(df_train, model, batch_size, epochs, output_path, num_classes):
     train_samples = []
 
-    for label in range(num_classes): # [0, 1, 2, 3, 4]
+    for label in range(num_classes):
 
         print("fetching positive samples...")
 
@@ -47,8 +46,10 @@ def train(df_train, model, batch_size, epochs, output_path, num_classes):
 
         print("fetching negative samples...")
 
-        for neg_sample in get_negatives(df_train, label, 1, num_classes):
+        for neg_sample in get_negatives(df_train, label, num_classes, 1, 4):
             train_samples.append(neg_sample)
+
+    print(len(train_samples))
 
     training_loader = DataLoader(train_samples, batch_size=batch_size, shuffle=True)
     training_loss = losses.ContrastiveLoss(model=model)
