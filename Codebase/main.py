@@ -128,7 +128,7 @@ def RunKNearestNeighborsBinary(task):
 
 if __name__ == '__main__':
 
-    task = input("Which task do you want to run? (A or B or C or D or E or F or G) \n A) Self Supervision \n "
+    task = input("Which task do you want to run? (A, B, C, D, E, F, or G) \n A) Self Supervision \n "
                  "B) Contrastive Training for Multiclass Classification \n "
                  "C) Index K Nearest Neighbors for Multiclass Classification \n "
                  "D) Search K Nearest Neighbors for Multiclass Classification \n "
