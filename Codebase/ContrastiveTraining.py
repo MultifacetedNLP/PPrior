@@ -49,8 +49,6 @@ def train(df_train, model, batch_size, epochs, output_path, num_classes):
         for neg_sample in get_negatives(df_train, label, num_classes, 1, 4):
             train_samples.append(neg_sample)
 
-    print(len(train_samples))
-
     training_loader = DataLoader(train_samples, batch_size=batch_size, shuffle=True)
     training_loss = losses.ContrastiveLoss(model=model)
     warmup_steps = math.ceil(len(training_loader) * epochs * 0.1)
