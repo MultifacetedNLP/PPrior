@@ -4,49 +4,56 @@ from torch.utils.data import DataLoader
 import math
 
 
-def get_positives(df_train, label, num_pos):
+def get_positives(df_train, label, num_pos, con_lambda):
     df_train_current = df_train[df_train["label"] == label]
+    current_vote = -1
 
     for _, row in df_train_current.iterrows():
 
-        selected_rows_idx = random.sample(range(len(df_train_current)), num_pos)
+        if current_vote != row["votes"]:
+            df_train_select = df_train_current[((df_train_current["votes"] - row["votes"]) > -con_lambda) &
+                                                ((df_train_current["votes"] - row["votes"]) < con_lambda)]
+            current_vote = row["votes"]
+
+        selected_rows_idx = random.sample(range(len(df_train_select)), num_pos)
 
         for selected_row in selected_rows_idx:
-            yield InputExample(texts=[row['training_text'], df_train_current.iloc[selected_row]["training_text"]], label=1)
+            yield InputExample(texts=[row['training_text'], df_train_select.iloc[selected_row]["training_text"]], label=1)
 
 
-def get_negatives(df_train, label, num_classes, num_neg_per_class, k=4):
+def get_negatives(df_train, label, num_neg_per_class, k, con_lambda):
     df_train_current = df_train[df_train["label"] == label]
-    df_train_neg_list = []
-
-    for neg_label in range(num_classes):
-        if neg_label != label:
-            df_train_neg_list.append(df_train[df_train["label"] == neg_label])
+    df_train_neg = df_train[df_train["label"] != label]
+    current_vote = -1
 
     for _, row in df_train_current.iterrows():
 
         for _ in range(k):
 
-            df_train_neg = df_train_neg_list[random.choice(range(num_classes - 1))]
-            selected_rows_idx = random.sample(range(len(df_train_neg)), num_neg_per_class)
+            if current_vote != row["votes"]:
+                df_train_select = df_train_neg[((df_train_neg["votes"] - row["votes"]) > con_lambda) |
+                                                ((df_train_neg["votes"] - row["votes"]) < -con_lambda)]
+                current_vote = row["votes"]
+
+            selected_rows_idx = random.sample(range(len(df_train_select)), num_neg_per_class)
 
             for selected_row in selected_rows_idx:
-                yield InputExample(texts=[row['training_text'], df_train_neg.iloc[selected_row]["training_text"]], label=0)
+                yield InputExample(texts=[row['training_text'], df_train_select.iloc[selected_row]["training_text"]], label=0)
 
 
-def train(df_train, model, batch_size, epochs, output_path, num_classes):
+def train(df_train, model, batch_size, epochs, output_path, num_classes, con_lambda=4):
     train_samples = []
 
     for label in range(num_classes):
 
         print("fetching positive samples...")
 
-        for pos_sample in get_positives(df_train, label, 1):
+        for pos_sample in get_positives(df_train, label, 1, con_lambda):
             train_samples.append(pos_sample)
 
         print("fetching negative samples...")
 
-        for neg_sample in get_negatives(df_train, label, num_classes, 1, 4):
+        for neg_sample in get_negatives(df_train, label, 1, 4, con_lambda):
             train_samples.append(neg_sample)
 
     training_loader = DataLoader(train_samples, batch_size=batch_size, shuffle=True)

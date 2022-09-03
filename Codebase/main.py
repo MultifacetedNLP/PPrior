@@ -72,7 +72,8 @@ def RunContrastiveTraining():
     model = SentenceTransformer(modules=[T5, pooler])
 
     ContrastiveTraining.train(df_train, model, batch_size=8, epochs=1,
-                              output_path="../TrainedModels/contrastive-training-pretrainedT5", num_classes=5)
+                              output_path="../TrainedModels/contrastive-training-pretrainedT5",
+                              num_classes=5, con_lambda=4)
 
 
 def RunContrastiveTrainingBinary():
@@ -83,7 +84,8 @@ def RunContrastiveTrainingBinary():
     model = SentenceTransformer(modules=[T5, pooler])
 
     ContrastiveTraining.train(df_train, model, batch_size=8, epochs=1,
-                              output_path="../TrainedModels/contrastive-training-anomaly-pretrainedT5", num_classes=2)
+                              output_path="../TrainedModels/contrastive-training-anomaly-pretrainedT5",
+                              num_classes=2, con_lambda=100)
 
 
 def RunKNearestNeighbors(task):

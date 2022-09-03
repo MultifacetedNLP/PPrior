@@ -38,11 +38,11 @@ def process(binaryClassification=False):
 
     # Drop redundant columns except label
     df_train.drop(
-        ['app_name', 'review', 'votes', 'date', 'label_name', 'Words Per Review', 'category', 'num_reviews', 'price',
+        ['app_name', 'review', 'date', 'label_name', 'Words Per Review', 'category', 'num_reviews', 'price',
          'rating'], axis=1, inplace=True)
 
     df_val.drop(
-        ['app_name', 'review', 'votes', 'date', 'label_name', 'Words Per Review', 'category', 'num_reviews', 'price',
+        ['app_name', 'review', 'date', 'label_name', 'Words Per Review', 'category', 'num_reviews', 'price',
          'rating'], axis=1, inplace=True)
 
     if binaryClassification:
