@@ -13,11 +13,17 @@ Datasets can be downloaded from these links: [Train Dataset](https://drive.googl
 The steps for setting up the project on a local machine are as follows:
 
 1- Clone the project
+```
+git clone https://github.com/MultifacetedNLP/PPrior.git
+```
 
 2- Install the [DVC](https://github.com/iterative/dvc) (Data Version Control) command line tool. The DVC is necessary for pulling the trained models and datasets from Google Drive to a local machine. 
 The installation section can be found [here](https://github.com/iterative/dvc#installation).
 
-3- Run the following command lines to pull trained models and datasets separately.
+3- Cd to the cloned project and run the following command lines to pull trained models and datasets separately.
+```
+cd PPrior
+```
 
 Pull Datasets:
 ```
