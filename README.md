@@ -7,7 +7,11 @@ In this GitHub repository, we provided the Python implementation of this framewo
 The TrainedModels folder contains DVC files pointing to the actual models in Google Drive. Also, the Datasets.dvc file points to the real datasets folder in Google Drive.
 
 # Datasets
-Datasets can be downloaded from these links: [Train Dataset](https://drive.google.com/uc?export=download&id=1sfILpj4aAAjQ5eDmi4NSx3staDOqHQ1j), [Validation Dataset](https://drive.google.com/uc?export=download&id=1JbtZlQxXCaPf8dxMgWfxAIRIZttMcxcF), [Test Dataset](https://drive.google.com/uc?export=download&id=1YNE6a-uHTrkzmMy9bydZ5Wawt6BIFI6k)
+You can access datasets in two ways:
+
+1- Datasets can be downloaded from these links: [Train Dataset](https://drive.google.com/uc?export=download&id=1sfILpj4aAAjQ5eDmi4NSx3staDOqHQ1j), [Validation Dataset](https://drive.google.com/uc?export=download&id=1JbtZlQxXCaPf8dxMgWfxAIRIZttMcxcF), [Test Dataset](https://drive.google.com/uc?export=download&id=1YNE6a-uHTrkzmMy9bydZ5Wawt6BIFI6k)
+
+2- They can also be accessed from [this huggingface page](https://huggingface.co/datasets/recmeapp/thumbs-up)
 
 # Setup
 The steps for setting up the project on a local machine are as follows:
